@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header class="header" th:fragment="header">
+    <div class="header-container">
+        <a th:href="@{/board/list}" class="logo">LOGO</a>
+        <nav class="nav" th:if="${session.userId == null}">
+            <a th:href="@{/user/login}" class="nav-item login">로그인</a>
+            <a th:href="@{/user/join}" class="nav-item signup">회원가입</a>
+        </nav>
+
+        <nav class="nav" th:unless="${session.userId == null}">
+            <a th:href="@{/user/logout}" class="nav-item login">로그아웃</a>
+        </nav>
+    </div>
+</header>
+</body>
+</html>

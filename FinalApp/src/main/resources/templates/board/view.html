@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시물 상세보기</title>
+    <link rel="stylesheet" th:href="@{/css/board/list.css}" />
+    <link rel="stylesheet" th:href="@{/css/board/view.css}" />
+    <!--    script 태그에 type=module 설정을 해야 모듈을 사용할 수 있다.-->
+    <script defer type="module" th:src="@{/js/board/view.js}"></script>
+</head>
+<body>
+<header class="header" th:replace="~{/fragment/header :: header}"></header>
+<input type="hidden" id="boardId" th:value="${board.boardId}">
+<div class="container">
+    <h1 class="title">자유 게시판</h1>
+    <div class="post-wrap">
+        <div class="post-wrap__box">
+            <div class="post-header">
+                <h2 class="post-title" th:text="${board.title}"></h2>
+                <p class="post-info">
+                    작성자: <span th:text="${board.loginId}"></span> |
+                    작성일: <span th:text="${board.createdDate}"></span> |
+                    수정일 : <span th:text="${board.modifiedDate}"></span>
+                </p>
+            </div>
+            <div class="post-content" th:text="${board.content}"></div>
+            <div class="post-images">
+                <!-- 이미지 예시 -->
+                <!-- /이미지 예시 -->
+            </div>
+        </div>
+        <div class="btn-wrap">
+            <th:block th:if="${board.userId == session.userId}">
+                <button type="button" class="btn-modify" th:data-id="${board.boardId}">수정</button>
+                <button type="button" class="btn-remove" th:data-id="${board.boardId}">삭제</button>
+            </th:block>
+            <button type="button" class="btn-back">뒤로 가기</button>
+        </div>
+        <div class="reply-wrap">
+            <th:block th:if="${session.userId != null}">
+                <h3>댓글 작성</h3>
+                <div class="reply-wrap__box">
+                    <div class="reply-content__box">
+                        <div class="reply-writer" th:text="${session.loginId}"></div>
+                        <textarea name="replyContent" id="reply-content" cols="30" rows="10"></textarea>
+                    </div>
+                    <div class="reply-btn-wrap">
+                        <button type="button" class="btn-reply">작성 완료</button>
+                    </div>
+                </div>
+            </th:block>
+
+            <!-- 댓글 리스트 -->
+            <div class="reply-list-wrap">
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

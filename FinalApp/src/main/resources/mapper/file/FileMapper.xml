@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.finalapp.mapper.file.FileMapper">
+    <insert id="insertFile" parameterType="FileDTO">
+        <selectKey keyProperty="fileId" resultType="Long" order="BEFORE">
+            SELECT SEQ_FILE.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TBL_FILE(FILE_ID, NAME, UPLOAD_PATH, UUID, BOARD_ID)
+        VALUES(#{fileId}, #{name}, #{uploadPath}, #{uuid}, #{boardId})
+    </insert>
+
+    <delete id="deleteFile" parameterType="Long">
+        DELETE FROM TBL_FILE
+        WHERE BOARD_ID = #{boardId}
+    </delete>
+
+    <select id="selectList" parameterType="Long" resultType="FileDTO">
+        SELECT FILE_ID, NAME, UPLOAD_PATH, UUID, BOARD_ID
+        FROM TBL_FILE
+        WHERE BOARD_ID = #{boardId}
+    </select>
+
+</mapper>

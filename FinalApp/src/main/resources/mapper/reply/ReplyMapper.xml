@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.finalapp.mapper.reply.ReplyMapper">
+    <insert id="insertReply" parameterType="ReplyWriteDTO">
+        <selectKey keyProperty="replyId" resultType="Long" order="BEFORE">
+            SELECT SEQ_REPLY.nextval FROM DUAL
+        </selectKey>
+        INSERT INTO TBL_REPLY(REPLY_ID, CONTENT, BOARD_ID, USER_ID)
+        VALUES (#{replyId}, #{content}, #{boardId}, #{userId})
+    </insert>
+
+    <select id="selectList" parameterType="Long" resultType="ReplyListDTO">
+        SELECT R.REPLY_ID, CONTENT, R.BOARD_ID, R.USER_ID, CREATED_DATE, MODIFIED_DATE,
+               LOGIN_ID
+        FROM TBL_REPLY R JOIN TBL_USER U
+                              ON R.BOARD_ID = #{boardId} AND R.USER_ID = U.USER_ID
+        ORDER BY R.REPLY_ID DESC
+    </select>
+
+    <select id="selectSlice" resultType="ReplyListDTO">
+        <![CDATA[
+        SELECT REPLY_ID, CONTENT, BOARD_ID, USER_ID, CREATED_DATE, MODIFIED_DATE, LOGIN_ID
+        FROM (
+                 SELECT ROWNUM AS RNUM, REPLY_ID, CONTENT, BOARD_ID, USER_ID, CREATED_DATE, MODIFIED_DATE, LOGIN_ID
+                 FROM (
+                          SELECT R.REPLY_ID, CONTENT, R.BOARD_ID, R.USER_ID, CREATED_DATE, MODIFIED_DATE,
+                                 LOGIN_ID
+                          FROM TBL_REPLY R JOIN TBL_USER U
+                                                ON R.BOARD_ID = #{boardId} AND R.USER_ID = U.USER_ID
+                          ORDER BY R.REPLY_ID DESC
+                      ) WHERE ROWNUM <= #{criteria.page} * #{criteria.amount} + 1
+             ) WHERE RNUM > (#{criteria.page} - 1) * #{criteria.amount}
+        ]]>
+    </select>
+
+
+    <update id="updateReply" parameterType="ReplyUpdateDTO">
+        UPDATE TBL_REPLY
+        SET CONTENT = #{content}, MODIFIED_DATE = SYSDATE
+        WHERE REPLY_ID = #{replyId}
+    </update>
+
+    <delete id="deleteReply" parameterType="Long">
+        DELETE FROM TBL_REPLY
+        WHERE REPLY_ID = #{replyId}
+    </delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

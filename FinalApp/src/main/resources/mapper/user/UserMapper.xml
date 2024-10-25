@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.finalapp.mapper.user.UserMapper">
+    <insert id="insertUser" parameterType="UserDTO">
+        <selectKey keyProperty="userId" resultType="Long" order="BEFORE">
+            SELECT SEQ_USER.nextVal FROM DUAL
+        </selectKey>
+        INSERT INTO TBL_USER (USER_ID, LOGIN_ID, PASSWORD, GENDER, EMAIL, ADDRESS, ADDRESS_DETAIL, ZIPCODE)
+        VALUES(#{userId}, #{loginId}, #{password}, #{gender}, #{email}, #{address}, #{addressDetail}, #{zipcode})
+    </insert>
+
+    <select id="selectId" resultType="Long">
+        SELECT USER_ID
+        FROM TBL_USER
+        WHERE LOGIN_ID = #{loginId} AND PASSWORD= #{password}
+    </select>
+
+    <select id="selectLoginInfo" resultType="UserSessionDTO">
+        SELECT USER_ID, LOGIN_ID
+        FROM TBL_USER
+        WHERE LOGIN_ID =#{loginId} AND PASSWORD = #{password}
+    </select>
+</mapper>

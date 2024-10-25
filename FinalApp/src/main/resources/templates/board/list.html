@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시판</title>
+    <link rel="stylesheet" th:href="@{/css/board/list.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" />
+    <script defer th:src="@{/js/board/list.js}"></script>
+</head>
+<body>
+<header class="header" th:replace="~{/fragment/header :: header}"></header>
+<div class="container">
+    <h1 class="title">커뮤니티 게시판</h1>
+    <div class="btn-wrap">
+        <button class="add-post-btn" type="button">새 게시글 작성</button>
+    </div>
+    <div class="board">
+        <!-- 게시물 샘플 -->
+        <div class="board-item" th:each="board : ${boardList}">
+            <div class="board-img-box">
+                <div class="board-item-image" th:if="${board.fileId == null}"
+                     style="background-image: url(https://via.placeholder.com/300x200)">
+                </div>
+
+                <div class="board-item-image" th:unless="${board.fileId == null}"
+                     th:style=" 'background-image: url(/upload/' + ${board.uploadPath} + '/' +  ${board.uuid} + '_' + ${board.name} + ')' ">
+                </div>
+
+                <div class="board-item-info">
+              <span class="like">
+                <i class="fas fa-heart"></i>
+                <span class="like-count">12</span>
+              </span>
+                    <span class="comment">
+                <i class="fas fa-comment"></i>
+                <span class="comment-count">5</span>
+              </span>
+                </div>
+            </div>
+            <div class="board-item-text">
+                <a th:href="@{/board/view(boardId=${board.boardId})}">
+                    <h3 class="board-item-title" th:text="${board.title}"></h3>
+                </a>
+                <span class="board-item-author" th:text="${board.loginId}"></span>
+            </div>
+        </div>
+        <!-- /게시물 샘플 -->
+    </div>
+</div>
+<!-- 페이징 처리 -->
+<div class="page-container">
+    <ul class="page-box">
+        <a th:href="@{/board/list(page=${page.startPage - 1})}" class="page-a" th:if="${page.prev}">
+            <li class="page-num prev">&lt</li>
+        </a>
+
+        <!--        th:block은 화면에 영향을 주지않는 가짜 태그
+                    타임리프 문법을 사용하기 위해 만들어 쓴다.
+        -->
+        <th:block th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}">
+            <a th:href="@{/board/list(page=${i})}" class="page-a">
+                <li class="page-num" th:classappend="${i == page.criteria.page ? 'active' : ''}" th:text="${i}"></li>
+            </a>
+        </th:block>
+
+        <a th:href="@{/board/list(page=${page.endPage + 1})}" class="page-a" th:if="${page.next}">
+            <li class="page-num next">&gt</li>
+        </a>
+    </ul>
+</div>
+<!-- /페이징 처리 -->
+
+<input type="hidden" class="board-id" th:value="${boardId}">
+<script>
+    let boardId = document.querySelector('.board-id').value;
+    if(boardId){
+        alert(boardId + '번 게시물이 등록되었습니다.');
+    }
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
